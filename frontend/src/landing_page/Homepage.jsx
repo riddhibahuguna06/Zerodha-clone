@@ -10,9 +10,9 @@ function Homepage(){
         <>
          <Navbar/>
          <Hero/>
-         <Education/>
+        <Stats/>
          <Awards/>
-         <Stats/>
+        <Education/>
          <Footer/>
         </>
     )
