@@ -4,6 +4,7 @@ import Education from "./Education";
 import Footer from "../Footer";
 import Hero from "./Hero";
 import Stats from "./Stats";
+import Price from "./Price";
 
 function Homepage(){
     return(
@@ -11,7 +12,9 @@ function Homepage(){
          <Navbar/>
          <Hero/>
         <Stats/>
+        <Price/>
          <Awards/>
+        
         <Education/>
          <Footer/>
         </>
