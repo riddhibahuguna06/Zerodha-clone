@@ -39,6 +39,31 @@ res.status(500).send("Error inserting holding!");
 }
 });
 
+app.get("/allHoldings" , async (req , res) => {
+
+    try{
+
+    let result = await HoldingModel.find({});
+    res.json(result);
+
+    }catch(err){
+
+        console.error(err);
+    }
+});
+
+app.get("/allPositions" , async (req , res) => {
+
+    try{
+     
+        let result = await PositionsModel.find({});
+        res.json(result);
+
+    }catch(err){
+        console.error(err);
+    }
+})
+
 async function startServer(){
     try{
         await mongoose.connect(url);
