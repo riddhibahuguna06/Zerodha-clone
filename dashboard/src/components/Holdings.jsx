@@ -1,12 +1,27 @@
-import {holdings} from "../data/data"
+import { useEffect, useState } from "react";
+import { holdings as initialHoldings } from "../data/data";
+
 function Holdings(){
+    const [allHoldings, setAllHoldings] = useState(initialHoldings);
+
+    useEffect(() => {
+        let isMounted = true;
+        fetch("http://localhost:3002/allHoldings")
+          .then((res) => {
+            if (!res.ok) throw new Error("Holdings service unavailable");
+            return res.json();
+          })
+          .then((data) => { if (isMounted && Array.isArray(data)) setAllHoldings(data); })
+          .catch(() => {});
+        return () => { isMounted = false; };
+    }, []);
     return (
     <> 
-    <h3 className="title">Holdings ({holdings.length})</h3>
+    <h3 className="title">Holdings ({allHoldings.length})</h3>
 
     <div className="order-table">
         <table>
-            <tr>
+            <thead><tr>
                 <th>Instrument</th>
                 <th>Qty.</th>
                 <th>Avg.cost</th>
@@ -15,9 +30,10 @@ function Holdings(){
                 <th>P&L</th>
                 <th>Net chg.</th>
                 <th>Day chg.</th>
-            </tr>
+            </tr></thead>
 
-            {holdings.map((stock , index) => {
+            <tbody>
+            {allHoldings.map((stock , index) => {
                 const curValue = stock.price * stock.qty;
                 const isProfit = curValue - stock.avg * stock.qty >= 0.0;
                 const profClass = isProfit ? "profit" : "loss ";
@@ -26,17 +42,18 @@ function Holdings(){
                 return(
              <tr key={index} className="item">
                 <td>{stock.name}</td>
-                <td>{stock.name}</td>
+                <td>{stock.qty}</td>
                 <td>{stock.avg.toFixed(2)}</td>
                 <td>{stock.price.toFixed(2)}</td>
                 <td>{curValue.toFixed(2)}</td>
-                <td className={profClass}>{(curValue - stock.avg* ServiceWorkerContainer.qty).toFixed(2)}</td>
+                <td className={profClass}>{(curValue - stock.avg * stock.qty).toFixed(2)}</td>
                 <td className={profClass}>{stock.net}</td>
                 <td className={dayClass}>{stock.day}</td>
             </tr>
  
                 )
             })}
+            </tbody>
         </table>
     </div>
 
@@ -63,7 +80,7 @@ function Holdings(){
         </div>
     
     </>
-    )
-}
+    );
+};
 
 export default Holdings ;
